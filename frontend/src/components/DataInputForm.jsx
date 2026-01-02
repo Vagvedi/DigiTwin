@@ -29,100 +29,104 @@ const DataInputForm = ({ onSubmit, loading }) => {
     })
   }
 
+  const fields = [
+    {
+      name: 'sleepHours',
+      label: 'Sleep Hours',
+      icon: '😴',
+      type: 'number',
+      step: '0.5',
+      min: '0',
+      max: '24',
+      placeholder: 'e.g., 7.5'
+    },
+    {
+      name: 'attendancePercentage',
+      label: 'Attendance %',
+      icon: '📊',
+      type: 'number',
+      step: '0.1',
+      min: '0',
+      max: '100',
+      placeholder: 'e.g., 85.5'
+    },
+    {
+      name: 'studyHours',
+      label: 'Study Hours',
+      icon: '📚',
+      type: 'number',
+      step: '0.5',
+      min: '0',
+      max: '24',
+      placeholder: 'e.g., 4.5'
+    },
+    {
+      name: 'stressLevel',
+      label: 'Stress Level',
+      icon: '😰',
+      type: 'number',
+      min: '1',
+      max: '10',
+      placeholder: '1-10'
+    },
+    {
+      name: 'deadlinesCount',
+      label: 'Deadlines',
+      icon: '📅',
+      type: 'number',
+      min: '0',
+      placeholder: 'e.g., 3'
+    }
+  ]
+
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-xl font-semibold mb-4">Daily Data Input</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Sleep Hours
-            </label>
-            <input
-              type="number"
-              step="0.5"
-              min="0"
-              max="24"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="e.g., 7.5"
-              value={formData.sleepHours}
-              onChange={(e) => setFormData({ ...formData, sleepHours: e.target.value })}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Attendance Percentage
-            </label>
-            <input
-              type="number"
-              step="0.1"
-              min="0"
-              max="100"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="e.g., 85.5"
-              value={formData.attendancePercentage}
-              onChange={(e) => setFormData({ ...formData, attendancePercentage: e.target.value })}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Study Hours
-            </label>
-            <input
-              type="number"
-              step="0.5"
-              min="0"
-              max="24"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="e.g., 4.5"
-              value={formData.studyHours}
-              onChange={(e) => setFormData({ ...formData, studyHours: e.target.value })}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Stress Level (1-10)
-            </label>
-            <input
-              type="number"
-              min="1"
-              max="10"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="e.g., 6"
-              value={formData.stressLevel}
-              onChange={(e) => setFormData({ ...formData, stressLevel: e.target.value })}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Upcoming Deadlines Count
-            </label>
-            <input
-              type="number"
-              min="0"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="e.g., 3"
-              value={formData.deadlinesCount}
-              onChange={(e) => setFormData({ ...formData, deadlinesCount: e.target.value })}
-            />
-          </div>
+    <div className="card p-8 animate-fade-in">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center">
+          <span className="mr-3 text-3xl">📝</span>
+          Daily Data Input
+        </h2>
+        <p className="text-gray-600">Enter your daily metrics to get personalized predictions</p>
+      </div>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          {fields.map((field) => (
+            <div key={field.name} className="animate-slide-up" style={{ animationDelay: `${fields.indexOf(field) * 50}ms` }}>
+              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                <span className="mr-2 text-lg">{field.icon}</span>
+                {field.label}
+              </label>
+              <input
+                type={field.type}
+                step={field.step}
+                min={field.min}
+                max={field.max}
+                required
+                className="input-field"
+                placeholder={field.placeholder}
+                value={formData[field.name]}
+                onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
+              />
+            </div>
+          ))}
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+          className="btn-primary w-full py-4 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? 'Submitting...' : 'Submit & Get Predictions'}
+          {loading ? (
+            <span className="flex items-center justify-center">
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Processing...
+            </span>
+          ) : (
+            '✨ Submit & Get Predictions'
+          )}
         </button>
       </form>
     </div>
@@ -130,4 +134,3 @@ const DataInputForm = ({ onSubmit, loading }) => {
 }
 
 export default DataInputForm
-
