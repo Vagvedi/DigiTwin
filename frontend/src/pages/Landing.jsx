@@ -1,15 +1,20 @@
-import { Link, Navigate } from 'react-router-dom'
-import { useContext } from 'react'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { useContext, useState } from 'react'
 import AuthContext from '../context/AuthContext'
 
 const Landing = () => {
   const { user, loading } = useContext(AuthContext)
+  const navigate = useNavigate()
+  const [showFeatures, setShowFeatures] = useState(false)
 
   // Show loading state while checking auth
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-white">
+        <div className="flex flex-col items-center">
+          <div className="w-12 h-12 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mb-4"></div>
+          <div className="text-gray-500 font-medium">Loading...</div>
+        </div>
       </div>
     )
   }
@@ -19,123 +24,275 @@ const Landing = () => {
     return <Navigate to="/dashboard" replace />
   }
 
+  const handleGetStarted = () => {
+    navigate('/signup')
+  }
+
+  const scrollToFeatures = () => {
+    setShowFeatures(true)
+    setTimeout(() => {
+      document.getElementById('features')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 100)
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="text-2xl font-bold text-indigo-600">
-              Digital Twin
-            </div>
-            <div className="space-x-4">
-              <Link
-                to="/login"
-                className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
+    <div className="min-h-screen bg-white">
+      {/* Minimal Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-3 group">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-accent-600 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
+                <span className="text-white text-lg font-bold">DT</span>
+              </div>
+              <span className="text-xl font-bold gradient-text">Digital Twin</span>
+            </Link>
+
+            {/* Nav Items */}
+            <div className="flex items-center space-x-8">
+              <button
+                onClick={scrollToFeatures}
+                className="text-gray-600 hover:text-gray-900 font-medium transition-colors hidden sm:block"
               >
-                Login
-              </Link>
-              <Link
-                to="/signup"
-                className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700"
+                Features
+              </button>
+              <button
+                onClick={handleGetStarted}
+                className="btn-primary px-6 py-2.5 text-sm"
               >
-                Sign Up
-              </Link>
+                Get Started
+              </button>
             </div>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        {/* Hero Section */}
-        <div className="text-center mb-20">
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            Your Academic Success, Predicted
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center pt-16 px-6 lg:px-8 overflow-hidden">
+        {/* Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-accent-50 -z-10"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(14,165,233,0.1),transparent_50%)] -z-10"></div>
+        
+        {/* Content */}
+        <div className="max-w-5xl mx-auto text-center animate-fade-in">
+          {/* Badge */}
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary-100 text-primary-700 text-sm font-semibold mb-8 animate-slide-down">
+            <span className="w-2 h-2 bg-primary-500 rounded-full mr-2 animate-pulse"></span>
+            AI-Powered Student Analytics
+          </div>
+
+          {/* Headline */}
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+            Predict Your Academic
+            <br />
+            <span className="gradient-text">Success</span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Track your daily habits, predict burnout risks, monitor attendance patterns, 
-            and optimize your exam performance with AI-powered insights.
+
+          {/* Subtext */}
+          <p className="text-xl sm:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+            Track daily habits, predict burnout risks, and optimize performance with 
+            <span className="font-semibold text-gray-900"> AI-powered insights</span>
           </p>
-          <p className="text-lg text-gray-500 mb-10 max-w-2xl mx-auto">
-            Get personalized recommendations to help you stay on track and achieve your academic goals.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/signup"
-              className="bg-indigo-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-indigo-700 transition-colors shadow-lg hover:shadow-xl"
+
+          {/* CTA */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+            <button
+              onClick={handleGetStarted}
+              className="btn-primary px-8 py-4 text-lg w-full sm:w-auto"
             >
-              Create Free Account
-            </Link>
-            <Link
-              to="/login"
-              className="bg-white text-indigo-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-50 transition-colors border-2 border-indigo-600 shadow-lg hover:shadow-xl"
+              Get Started Free
+            </button>
+            <button
+              onClick={scrollToFeatures}
+              className="px-8 py-4 text-lg font-semibold text-gray-700 bg-white border-2 border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-all w-full sm:w-auto"
             >
-              Login
-            </Link>
+              Learn More
+            </button>
+          </div>
+
+          {/* Trust Indicators */}
+          <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-gray-500">
+            <div className="flex items-center">
+              <span className="text-success-500 mr-2">✓</span>
+              No credit card required
+            </div>
+            <div className="flex items-center">
+              <span className="text-success-500 mr-2">✓</span>
+              Free forever
+            </div>
+            <div className="flex items-center">
+              <span className="text-success-500 mr-2">✓</span>
+              Setup in 2 minutes
+            </div>
           </div>
         </div>
 
-        {/* Feature Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
-          <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-            <div className="text-5xl mb-4">🔥</div>
-            <h3 className="text-xl font-semibold mb-3 text-gray-900">Burnout Prediction</h3>
-            <p className="text-gray-600 leading-relaxed">
-              Get early warnings about burnout risk based on your sleep, stress levels, and study patterns. 
-              Receive actionable recommendations to prevent burnout before it happens.
-            </p>
-          </div>
-          <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-            <div className="text-5xl mb-4">📊</div>
-            <h3 className="text-xl font-semibold mb-3 text-gray-900">Attendance Risk</h3>
-            <p className="text-gray-600 leading-relaxed">
-              Monitor your attendance patterns and receive alerts when you're at risk of falling behind. 
-              Stay on track with personalized attendance strategies.
-            </p>
-          </div>
-          <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-            <div className="text-5xl mb-4">🎯</div>
-            <h3 className="text-xl font-semibold mb-3 text-gray-900">Performance Prediction</h3>
-            <p className="text-gray-600 leading-relaxed">
-              Predict your exam performance based on study hours, attendance, and stress levels. 
-              Get personalized study recommendations to improve your scores.
-            </p>
-          </div>
-        </div>
+        {/* Decorative Elements */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent -z-10"></div>
+      </section>
 
-        {/* How It Works Section */}
-        <div className="mt-20 bg-white rounded-lg shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">How It Works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-indigo-600">1</span>
+      {/* Features Section */}
+      <section id="features" className="py-24 px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+              Everything you need to
+              <span className="gradient-text"> succeed</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Powerful AI-driven predictions to help you stay on track and achieve your goals
+            </p>
+          </div>
+
+          {/* Feature Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+            {/* Burnout Prediction */}
+            <div className="card-hover p-8 group animate-scale-in" style={{ animationDelay: '0ms' }}>
+              <div className="w-16 h-16 bg-gradient-to-br from-danger-100 to-danger-200 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <span className="text-4xl">🔥</span>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Submit Daily Data</h3>
-              <p className="text-gray-600 text-sm">
-                Enter your sleep hours, attendance, study time, stress level, and deadlines each day.
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Burnout Prediction</h3>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                Get early warnings about burnout risk based on your sleep, stress levels, and study patterns.
+              </p>
+              <ul className="space-y-2 text-sm text-gray-500">
+                <li className="flex items-center">
+                  <span className="text-primary-500 mr-2">→</span>
+                  Real-time risk assessment
+                </li>
+                <li className="flex items-center">
+                  <span className="text-primary-500 mr-2">→</span>
+                  Personalized recommendations
+                </li>
+              </ul>
+            </div>
+
+            {/* Attendance Risk */}
+            <div className="card-hover p-8 group animate-scale-in" style={{ animationDelay: '100ms' }}>
+              <div className="w-16 h-16 bg-gradient-to-br from-warning-100 to-warning-200 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <span className="text-4xl">📊</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Attendance Risk</h3>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                Monitor attendance patterns and receive alerts when you're at risk of falling behind.
+              </p>
+              <ul className="space-y-2 text-sm text-gray-500">
+                <li className="flex items-center">
+                  <span className="text-primary-500 mr-2">→</span>
+                  Pattern analysis
+                </li>
+                <li className="flex items-center">
+                  <span className="text-primary-500 mr-2">→</span>
+                  Proactive alerts
+                </li>
+              </ul>
+            </div>
+
+            {/* Performance Prediction */}
+            <div className="card-hover p-8 group animate-scale-in" style={{ animationDelay: '200ms' }}>
+              <div className="w-16 h-16 bg-gradient-to-br from-success-100 to-success-200 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <span className="text-4xl">🎯</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Performance Prediction</h3>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                Predict exam performance and get personalized study recommendations to improve your scores.
+              </p>
+              <ul className="space-y-2 text-sm text-gray-500">
+                <li className="flex items-center">
+                  <span className="text-primary-500 mr-2">→</span>
+                  Score forecasting
+                </li>
+                <li className="flex items-center">
+                  <span className="text-primary-500 mr-2">→</span>
+                  Study optimization
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* How It Works */}
+          <div className="card p-12 bg-gradient-to-br from-gray-50 to-white animate-fade-in">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                How It Works
+              </h2>
+              <p className="text-lg text-gray-600">
+                Get started in three simple steps
               </p>
             </div>
-            <div className="text-center">
-              <div className="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-indigo-600">2</span>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Get AI Predictions</h3>
-              <p className="text-gray-600 text-sm">
-                Receive instant predictions for burnout risk, attendance risk, and exam performance.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-indigo-600">3</span>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Take Action</h3>
-              <p className="text-gray-600 text-sm">
-                Follow personalized recommendations to optimize your academic performance and well-being.
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  step: '1',
+                  title: 'Submit Daily Data',
+                  description: 'Enter your sleep hours, attendance, study time, stress level, and deadlines each day.',
+                  icon: '📝'
+                },
+                {
+                  step: '2',
+                  title: 'Get AI Predictions',
+                  description: 'Receive instant predictions for burnout risk, attendance risk, and exam performance.',
+                  icon: '🤖'
+                },
+                {
+                  step: '3',
+                  title: 'Take Action',
+                  description: 'Follow personalized recommendations to optimize your academic performance.',
+                  icon: '✨'
+                }
+              ].map((item, index) => (
+                <div key={index} className="text-center animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
+                  <div className="w-20 h-20 bg-gradient-to-br from-primary-100 to-accent-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-soft hover:shadow-medium transition-shadow">
+                    <span className="text-4xl">{item.icon}</span>
+                  </div>
+                  <div className="inline-flex items-center justify-center w-8 h-8 bg-primary-600 text-white rounded-full text-sm font-bold mb-4">
+                    {item.step}
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-6 lg:px-8 bg-gradient-to-br from-primary-600 to-accent-600">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
+            Ready to transform your academic journey?
+          </h2>
+          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+            Join students who are already using AI to predict and optimize their performance
+          </p>
+          <button
+            onClick={handleGetStarted}
+            className="bg-white text-primary-600 px-8 py-4 rounded-lg text-lg font-bold hover:bg-gray-50 shadow-large transform hover:scale-105 transition-all duration-200"
+          >
+            Get Started Free →
+          </button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-12 px-6 lg:px-8 border-t border-gray-200 bg-white">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center">
+          <div className="flex items-center space-x-3 mb-4 sm:mb-0">
+            <div className="w-8 h-8 bg-gradient-to-br from-primary-600 to-accent-600 rounded-lg flex items-center justify-center">
+              <span className="text-white text-sm font-bold">DT</span>
+            </div>
+            <span className="text-gray-600 font-medium">Digital Twin</span>
+          </div>
+          <div className="text-sm text-gray-500">
+            © 2024 Digital Twin. All rights reserved.
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
