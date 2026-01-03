@@ -11,7 +11,7 @@ router.use(authenticateToken)
 // Get predictions from ML service
 router.post('/', async (req, res) => {
   try {
-    const { sleepHours, attendancePercentage, studyHours, stressLevel, deadlinesCount } = req.body
+    const { sleepHours, attendancePercentage, studyHours, stressLevel, deadlinesCount, simulate } = req.body
     const userId = req.user.id
 
     // Validate input
@@ -49,28 +49,31 @@ router.post('/', async (req, res) => {
       predictions = generateFallbackPredictions(mlServiceData)
     }
 
-    // Get the latest student data entry for this user
-    const [dataResult] = await pool.query(
-      'SELECT id FROM student_data WHERE user_id = ? ORDER BY created_at DESC LIMIT 1',
-      [userId]
-    )
-
-    const studentDataId = dataResult.length > 0 ? dataResult[0].id : null
-
-    // Store prediction in database
-    if (studentDataId) {
-      await pool.query(
-        `INSERT INTO predictions 
-         (user_id, student_data_id, burnout_risk, attendance_risk, exam_performance)
-         VALUES (?, ?, ?, ?, ?)`,
-        [
-          userId,
-          studentDataId,
-          predictions.burnout_risk,
-          predictions.attendance_risk,
-          predictions.exam_performance
-        ]
+    // Only store prediction in database if not a simulation
+    if (!simulate) {
+      // Get the latest student data entry for this user
+      const [dataResult] = await pool.query(
+        'SELECT id FROM student_data WHERE user_id = ? ORDER BY created_at DESC LIMIT 1',
+        [userId]
       )
+
+      const studentDataId = dataResult.length > 0 ? dataResult[0].id : null
+
+      // Store prediction in database
+      if (studentDataId) {
+        await pool.query(
+          `INSERT INTO predictions 
+           (user_id, student_data_id, burnout_risk, attendance_risk, exam_performance)
+           VALUES (?, ?, ?, ?, ?)`,
+          [
+            userId,
+            studentDataId,
+            predictions.burnout_risk,
+            predictions.attendance_risk,
+            predictions.exam_performance
+          ]
+        )
+      }
     }
 
     // Return predictions in frontend-friendly format

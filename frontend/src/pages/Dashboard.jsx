@@ -8,6 +8,7 @@ import AttendancePredictionTab from '../components/tabs/AttendancePredictionTab'
 import PerformancePredictionTab from '../components/tabs/PerformancePredictionTab'
 import HistoryTab from '../components/tabs/HistoryTab'
 import FocusModeTab from '../components/tabs/FocusModeTab'
+import WhatIfSimulatorTab from '../components/tabs/WhatIfSimulatorTab'
 
 const Dashboard = () => {
   const { user, logout } = useContext(AuthContext)
@@ -97,6 +98,7 @@ const Dashboard = () => {
     { id: 'burnout', label: 'Burnout', icon: '🔥', color: 'danger' },
     { id: 'attendance', label: 'Attendance', icon: '📊', color: 'warning' },
     { id: 'performance', label: 'Performance', icon: '🎯', color: 'success' },
+    { id: 'simulator', label: 'What-If', icon: '🔮', color: 'accent' },
     { id: 'focus', label: 'Focus Mode', icon: '🧘', color: 'accent' },
     { id: 'history', label: 'History', icon: '📈', color: 'primary' }
   ]
@@ -214,6 +216,9 @@ const Dashboard = () => {
               loading={fetchingPredictions}
               error={error}
             />
+          )}
+          {activeTab === 'simulator' && (
+            <WhatIfSimulatorTab baselinePrediction={latestPrediction} />
           )}
           {activeTab === 'focus' && (
             <FocusModeTab />
