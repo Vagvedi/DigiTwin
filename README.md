@@ -423,7 +423,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **⭐ Star this repository if it helped you!**
 
-**📧 Contact: [Your Email] | 🐛 Issues: [GitHub Issues]**
+
 
 [![GitHub stars](https://img.shields.io/github/stars/yourusername/digitwin?style=social)](https://github.com/yourusername/digitwin/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/yourusername/digitwin?style=social)](https://github.com/yourusername/digitwin/network)
